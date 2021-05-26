@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import subprocess
-import re
+import subprocess, re, threading, sys
 from unmanic.libs.unplugins.settings import PluginSettings
 
 
@@ -26,7 +25,37 @@ def on_worker_process(data):
     :return:
     
     """
-    p = subprocess.run(['ffmpeg-normalize', data['original_file_path'], '-o', data['original_file_path'], '-f', '-c:a', 'aac'])
+    # import sys
+    # import time
+    # print("wait for tracing")
+    # while not sys.gettrace():
+    #     time.sleep(0.1)
+    # print("tracing found")
+    streams_to_normalize = []
+    file_probe = data['file_probe']
+    streams = file_probe['streams']
+    for stream in streams:
+        codec_type = stream['codec_type']
+        codec_name = stream['codec_name']
+        if codec_type.lower() == 'audio':
+            streams_to_normalize += [
+                "-c:a", "itsMeMario"
+            ]
+            continue
+
+    if data['exec_ffmpeg']:
+        data['ffmpeg_args'] = [
+            '-i',
+            data.get('file_in'),
+            '-hide_banner',
+            '-loglevel',
+            'info',
+        ]
+        data['ffmpeg_args'] += streams_to_normalize
+        data['ffmpeg_args'] += ['-y', data.get('file_out')]
+        
+            
+    # p = subprocess.run(['ffmpeg-normalize', data['original_file_path'], '-o', data['original_file_path'], '-f', '-c:a', 'aac'])
     
     
     # p = subprocess.run(['ffmpeg', '-i', data['original_file_path'], '-af', 'volumedetect', '-vn', '-sn', '-dn', '-f', 'null', 'pipe:1'],
