@@ -1,0 +1,9 @@
+{
+    "author": "b1kjsh",
+    "description": "Wrapper for ffmpeg-normalizer",
+    "icon": "",
+    "id": "volumenormalizer",
+    "name": "Volume Normalizer",
+    "tags": "",
+    "version": "0.0.1"
+}
